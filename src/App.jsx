@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './App.css';
+import SearchBar from './components/SearchBar';
 import productData from './products.json';
+import ProductCard from './components/ProductCard';
 
 function App() {
   const [products, setProducts] = useState(productData);
@@ -10,12 +12,12 @@ function App() {
       setProducts(deleted)
   }
 
-  const handleSearch = (e) => {
+  const handleSearch = (searchedValue) => {
     
-    if(e.target.value === ''){
+    if(searchedValue === ''){
       setProducts (productData)
     } else{
-      const searched = productData.filter (elem => elem.name.toLowerCase().includes((e.target.value).toLowerCase()))
+      const searched = productData.filter (elem => elem.name.toLowerCase().includes((searchedValue).toLowerCase()))
       setProducts (searched)
     }
   }
@@ -23,15 +25,11 @@ function App() {
   return (
     <div className="cart">
       <h1>My shopping cart</h1>
-      <input type="text" placeholder='Search' onChange={(e) => handleSearch(e)} />
+      <SearchBar onSearch = {handleSearch} />
       <div>
         {products.map((elem) => {
           return(
-            <div key={elem._id}>
-              <h3>{elem.name}</h3>
-              <h3>{elem.price}</h3>
-              <button onClick={() => handleDelete (elem._id)}> Delete</button>
-            </div>
+            <ProductCard key = {elem._id} info = {elem} onDelete={handleDelete}/>
           )
         })}
       </div>
